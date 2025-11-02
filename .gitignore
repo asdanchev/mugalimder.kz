@@ -1,0 +1,29 @@
+# --- системные ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+*.log
+.DS_Store
+
+# --- env и секреты ---
+env/
+.env*
+!env/app.env.example
+
+# --- docker volumes ---
+volumes/
+!volumes/static/
+!volumes/media/
+
+# --- IDE ---
+.vscode/
+.idea/
+
+# --- pyenv / virtualenv ---
+venv/
+.venv/
+ENV/
+env.bak/
