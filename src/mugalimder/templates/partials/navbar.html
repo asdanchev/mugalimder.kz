@@ -1,0 +1,75 @@
+<nav style="background:#145587;color:white;padding:12px;">
+  <div style="max-width:960px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;">
+    
+    <a href="/" style="color:white;text-decoration:none;font-weight:bold;">
+      Mugalimder.kz
+    </a>
+
+    <div style="display:flex;gap:16px;align-items:center;">
+      
+      <a href="/"
+         style="
+           color:white;
+           text-decoration:none;
+           padding:6px 10px;
+           border-radius:4px;
+           {% if request.path == '/' %}
+             background:#0e3f66;
+           {% endif %}
+         ">
+        Главная
+      </a>
+
+      <a href="/materials/"
+         style="
+           color:white;
+           text-decoration:none;
+           padding:6px 10px;
+           border-radius:4px;
+           {% if request.path|slice:':11' == '/materials/' %}
+             background:#0e3f66;
+           {% endif %}
+         ">
+        Материалы
+      </a>
+
+      {% if user.is_authenticated %}
+        <span style="opacity:0.9;">
+          {{ user.username }}
+        </span>
+
+        {% if user.is_staff %}
+          <a href="/admin/" style="color:white;text-decoration:none;">
+            Админка
+          </a>
+        {% endif %}
+
+        <form action="{% url 'logout' %}" method="post" style="display:inline;margin:0;padding:0;">
+  {% csrf_token %}
+  <button type="submit"
+          style="
+            background:none;
+            border:none;
+            color:white;
+            cursor:pointer;
+            padding:0;
+            font:inherit;
+          ">
+    Выйти
+  </button>
+</form>
+
+      {% else %}
+        <a href="{% url 'login' %}"
+           style="color:white;text-decoration:none;">
+          Войти
+        </a>
+        <a href="{% url 'register' %}"
+           style="color:white;text-decoration:none;">
+          Регистрация
+        </a>
+      {% endif %}
+    </div>
+
+  </div>
+</nav>

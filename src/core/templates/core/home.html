@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Главная — Mugalimder.kz{% endblock %}
+{% block content %}
+<section class="hero">
+  <h1>Платформа учителей Казахстана</h1>
+  <p class="muted">Профили, обмен методическими материалами, новости и нормативные акты — в одном месте.</p>
+  <div style="display:flex;gap:12px;margin-top:16px;">
+    <a class="btn" href="/auth/register/">Создать профиль</a>
+    <a class="btn secondary" href="/auth/login/">Войти</a>
+  </div>
+</section>
+
+<section style="margin-top:24px;">
+  <h2>Новости</h2>
+  <div class="grid">
+    <div class="card"><b>Заголовок новости 1</b><p class="muted">Краткое описание…</p></div>
+    <div class="card"><b>Заголовок новости 2</b><p class="muted">Краткое описание…</p></div>
+    <div class="card"><b>Заголовок новости 3</b><p class="muted">Краткое описание…</p></div>
+  </div>
+  <div style="margin-top:12px;"><a href="/news/">Все новости →</a></div>
+</section>
+
+<section style="margin-top:24px;">
+  <h2>Нормативно-правовые акты</h2>
+  <div class="grid">
+    <div class="card"><b>Приказ МОН РК №…</b><p class="muted">Краткое описание и ссылка на PDF.</p></div>
+    <div class="card"><b>Постановление Правительства №…</b><p class="muted">Краткое описание и ссылка.</p></div>
+    <div class="card"><b>Закон РК «Об образовании»</b><p class="muted">Ключевые изменения…</p></div>
+  </div>
+  <div style="margin-top:12px;"><a href="/laws/">Перейти в раздел →</a></div>
+</section>
+
+<section style="margin-top:24px;">
+  <h2>Профили учителей</h2>
+  <p class="muted">Лучшие и активные профили будут отображаться здесь. Временно можно открывать по токену: <code>/&lt;token&gt;/</code></p>
+</section>
+{% endblock %}

@@ -14,12 +14,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY src/requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Копируем проект
-COPY src /app
+# Копируем проект (ВАЖНО!)
+COPY src/ /app/src/
 
 # Создадим непривилегированного пользователя
 RUN useradd -m appuser
 USER appuser
 
 # Gunicorn — точка входа
-CMD ["gunicorn", "mugalimder.wsgi:application", "--bind", "0.0.0.0:8000", "--workers=3", "--timeout=60"]
+CMD ["gunicorn", "mugalimder.wsgi:application", "--chdir", "/app/src", "--bind", "0.0.0.0:8000", "--workers=3", "--timeout=60"]

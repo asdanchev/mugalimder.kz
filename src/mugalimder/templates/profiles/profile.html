@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ profile.full_name }} — Профиль учителя</title>
+    <style>
+        body { font-family: system-ui, sans-serif; background: #fafafa; margin: 40px; }
+        .card {
+            max-width: 600px; margin: auto; padding: 30px;
+            background: #fff; border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; font-size: 24px; margin-bottom: 10px; }
+        p { color: #555; font-size: 16px; line-height: 1.5; }
+        .meta { margin-top: 20px; font-size: 14px; color: #888; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>{{ profile.full_name }}</h1>
+        <p>{{ profile.bio|default:"Пока нет описания." }}</p>
+        <p><strong>Премиум:</strong> {{ profile.is_premium|yesno:"Да,Нет" }}</p>
+        <div class="meta">Токен: {{ profile.token }}</div>
+    </div>
+</body>
+</html>

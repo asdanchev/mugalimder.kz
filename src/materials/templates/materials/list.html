@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Список материалов{% endblock %}
+
+{% block content %}
+<h1>Список материалов</h1>
+
+<form method="get" style="margin-bottom:16px;">
+  <label>Тип:</label>
+  <select name="type">
+    <option value="">— все —</option>
+    {% for t in material_types %}
+      <option value="{{ t.slug }}" {% if selected_type and selected_type.slug == t.slug %}selected{% endif %}>{{ t.title }}</option>
+    {% endfor %}
+  </select>
+
+  <label style="margin-left:12px;">Предмет:</label>
+  <select name="subject">
+    <option value="">— все —</option>
+    {% for s in subjects %}
+      <option value="{{ s.slug }}" {% if selected_subject and selected_subject.slug == s.slug %}selected{% endif %}>{{ s.title }}</option>
+    {% endfor %}
+  </select>
+
+  <label style="margin-left:12px;">Класс:</label>
+  <select name="grade">
+    <option value="">— все —</option>
+    {% for g in grades %}
+      <option value="{{ g }}" {% if selected_grade == g %}selected{% endif %}>{{ g }} класс</option>
+    {% endfor %}
+  </select>
+
+  <button type="submit" style="margin-left:12px;">Фильтр</button>
+</form>
+
+{% if user.is_authenticated %}
+  <p><a href="{% url 'materials-create' %}">Добавить материал</a></p>
+{% else %}
+  <p>Чтобы скачивать материалы — <a href="{% url 'login' %}">войдите</a> или <a href="{% url 'register' %}">зарегистрируйтесь</a>.</p>
+{% endif %}
+
+<ul>
+  {% for m in materials %}
+    <li style="margin-bottom:14px;">
+      <strong>{{ m.title }}</strong><br>
+      {{ m.material_type.title }} • {{ m.subject.title }} • {{ m.grade }} класс<br>
+
+      {% if user.is_authenticated %}
+        <a href="{% url 'materials-download' m.pk %}">Скачать</a>
+      {% else %}
+        🔒 Скачивание после входа
+      {% endif %}
+    </li>
+  {% empty %}
+    <li>Пока материалов нет.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

@@ -9,6 +9,7 @@ services:
     depends_on:
       - db
     volumes:
+      - ./src:/app/src
       - ./volumes/static:/app/staticfiles
       - ./volumes/media:/app/mediafiles
     restart: unless-stopped

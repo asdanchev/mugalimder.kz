@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Материалы{% endblock %}
+
+{% block content %}
+<h1>Материалы</h1>
+
+<p>
+  <a href="{% url 'materials-list' %}">Перейти к списку материалов</a>
+  {% if user.is_authenticated %}
+    | <a href="{% url 'materials-create' %}">Добавить материал</a>
+  {% endif %}
+</p>
+
+<h3>Типы материалов</h3>
+<ul>
+  {% for t in material_types %}
+    <li><a href="{% url 'materials-list' %}?type={{ t.slug }}">{{ t.title }}</a></li>
+  {% empty %}
+    <li>Пока нет типов материалов. Добавь в админке.</li>
+  {% endfor %}
+</ul>
+
+<h3>Предметы</h3>
+<ul>
+  {% for s in subjects %}
+    <li><a href="{% url 'materials-list' %}?subject={{ s.slug }}">{{ s.title }}</a></li>
+  {% empty %}
+    <li>Пока нет предметов. Добавь в админке.</li>
+  {% endfor %}
+</ul>
+
+<h3>Классы</h3>
+<ul>
+  {% for g in grades %}
+    <li><a href="{% url 'materials-list' %}?grade={{ g }}">{{ g }} класс</a></li>
+  {% endfor %}
+</ul>
+{% endblock %}
