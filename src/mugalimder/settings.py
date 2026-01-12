@@ -1,6 +1,5 @@
 from pathlib import Path
 import os
-
 import dj_database_url
 
 
@@ -40,6 +39,7 @@ INSTALLED_APPS = [
     "core",
     "users",
     'materials',
+    'cms',
 ]
 
 
@@ -107,8 +107,12 @@ USE_TZ = True
 
 
 # === Static / Media ===
-STATIC_URL = "/static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_URL = '/static/'
+STATIC_ROOT = Path('/app/staticfiles')
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'mugalimder' / 'static',  # /app/src/mugalimder/static
+]
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "mediafiles"

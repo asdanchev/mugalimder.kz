@@ -3,8 +3,11 @@ from django.contrib.auth import login
 from django.contrib.auth.models import User
 from django.contrib import messages
 
+
 def register(request):
     if request.method == 'POST':
+        if (request.POST.get('website') or '').strip():
+            return redirect('register')
         email = (request.POST.get('email') or '').strip().lower()
         password1 = request.POST.get('password1') or ''
         password2 = request.POST.get('password2') or ''
@@ -22,12 +25,20 @@ def register(request):
             return redirect('register')
 
         if User.objects.filter(username=email).exists():
-            messages.error(request, 'Пользователь с таким email уже существует. Попробуйте войти.')
+            messages.error(
+                request,
+                'Пользователь с таким email уже существует. Попробуйте войти.'
+            )
             return redirect('login')
 
-        user = User.objects.create_user(username=email, email=email, password=password1)
+        user = User.objects.create_user(
+            username=email,
+            email=email,
+            password=password1
+        )
+
         login(request, user)
-        messages.success(request, 'Регистрация успешна!')
+        messages.success(request, 'Регистрация прошла успешно!')
         return redirect('home')
 
     return render(request, 'users/register.html')

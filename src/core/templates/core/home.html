@@ -1,37 +1,177 @@
 {% extends "base.html" %}
-{% block title %}Главная — Mugalimder.kz{% endblock %}
+{% block title %}Mugalimder.kz — материалы для учителей{% endblock %}
+
 {% block content %}
-<section class="hero">
-  <h1>Платформа учителей Казахстана</h1>
-  <p class="muted">Профили, обмен методическими материалами, новости и нормативные акты — в одном месте.</p>
-  <div style="display:flex;gap:12px;margin-top:16px;">
-    <a class="btn" href="/auth/register/">Создать профиль</a>
-    <a class="btn secondary" href="/auth/login/">Войти</a>
+
+<section class="card hero">
+  <h1>Материалы для учителей Казахстана</h1>
+  <p>Поурочные планы, КТП, методические разработки, СОР/СОЧ — удобно по предметам и классам (1–11).</p>
+
+  <div class="actions">
+    <a class="btn btn-primary" href="/materials/list/">Найти материалы</a>
+
+    {% if user.is_authenticated %}
+      <a class="btn btn-accent" href="/materials/create/">Добавить материал</a>
+    {% else %}
+      <a class="btn btn-accent" href="{% url 'register' %}">Зарегистрироваться</a>
+    {% endif %}
   </div>
 </section>
 
-<section style="margin-top:24px;">
-  <h2>Новости</h2>
-  <div class="grid">
-    <div class="card"><b>Заголовок новости 1</b><p class="muted">Краткое описание…</p></div>
-    <div class="card"><b>Заголовок новости 2</b><p class="muted">Краткое описание…</p></div>
-    <div class="card"><b>Заголовок новости 3</b><p class="muted">Краткое описание…</p></div>
+<div class="grid">
+
+  {# ЛЕВАЯ КОЛОНКА: фильтры + последние материалы #}
+  <div class="card section">
+    <h2>Быстрый поиск</h2>
+
+    <div class="filters">
+      <div class="field">
+        <label>Тип материала</label>
+        <select onchange="if(this.value) window.location.href=this.value;">
+          <option value="">Выберите…</option>
+          {% for t in material_types %}
+            <option value="/materials/list/?type={{ t.slug }}">{{ t.title }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Предмет</label>
+        <select onchange="if(this.value) window.location.href=this.value;">
+          <option value="">Выберите…</option>
+          {% for s in subjects %}
+            <option value="/materials/list/?subject={{ s.slug }}">{{ s.title }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Класс</label>
+        <select onchange="if(this.value) window.location.href=this.value;">
+          <option value="">Выберите…</option>
+          {% for g in grades %}
+            <option value="/materials/list/?grade={{ g }}">{{ g }} класс</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;">
+      <a class="btn btn-outline" href="/materials/list/">Открыть каталог</a>
+      {% if user.is_authenticated %}
+        <a class="btn btn-primary" href="/materials/create/">Добавить материал</a>
+      {% else %}
+        <a class="btn btn-primary" href="{% url 'login' %}">Войти для скачивания</a>
+      {% endif %}
+    </div>
   </div>
-  <div style="margin-top:12px;"><a href="/news/">Все новости →</a></div>
+
+  {# ПРАВАЯ КОЛОНКА: статьи + новости #}
+  <aside class="card section">
+    <h2>Свежие статьи</h2>
+
+    {% if latest_articles %}
+      <div class="list">
+        {% for a in latest_articles %}
+          <div class="item">
+            <div style="font-weight:800;">{{ a.title }}</div>
+            {% if a.short_description %}
+              <div class="meta">{{ a.short_description }}</div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div style="color:var(--muted);">Пока статей нет.</div>
+    {% endif %}
+
+    <div style="height:14px;"></div>
+
+    <h2>Новости и законы</h2>
+    {% if latest_news %}
+      <div class="list">
+        {% for n in latest_news %}
+          <div class="item">
+            <div style="font-weight:800;">{{ n.title }}</div>
+            {% if n.short_description %}
+              <div class="meta">{{ n.short_description }}</div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div style="color:var(--muted);">Пока новостей нет.</div>
+    {% endif %}
+  </aside>
+
+</div>
+
+<section class="card section" style="margin-top:16px;">
+  <h2>Последние материалы</h2>
+
+  {% if latest_materials %}
+    <div class="cards">
+      {% for m in latest_materials %}
+        <div class="item">
+          <div style="font-weight:800;">{{ m.title }}</div>
+          <div class="meta">
+            {{ m.material_type.title }} • {{ m.subject.title }} • {{ m.grade }} класс
+          </div>
+
+          <div style="margin-top:10px;">
+            {% if user.is_authenticated %}
+              <a class="btn btn-outline" href="{% url 'materials-download' m.pk %}">Скачать</a>
+            {% else %}
+              <span style="color:var(--muted);">🔒</span>
+              <a class="btn btn-outline" href="{% url 'login' %}">Войти для скачивания</a>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div style="margin-top:12px;">
+      <a href="/materials/list/" style="color:var(--brand);font-weight:700;">Смотреть все материалы →</a>
+    </div>
+  {% else %}
+    <div style="color:var(--muted);">Пока материалов нет. Добавь несколько — и блок оживёт.</div>
+  {% endif %}
 </section>
 
-<section style="margin-top:24px;">
-  <h2>Нормативно-правовые акты</h2>
-  <div class="grid">
-    <div class="card"><b>Приказ МОН РК №…</b><p class="muted">Краткое описание и ссылка на PDF.</p></div>
-    <div class="card"><b>Постановление Правительства №…</b><p class="muted">Краткое описание и ссылка.</p></div>
-    <div class="card"><b>Закон РК «Об образовании»</b><p class="muted">Ключевые изменения…</p></div>
+<section class="card section" style="margin-top:16px;">
+  <h2>Категории материалов</h2>
+
+  {% if material_types %}
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      {% for t in material_types %}
+        <a class="btn btn-outline" href="/materials/list/?type={{ t.slug }}">{{ t.title }}</a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div style="color:var(--muted);">Пока нет категорий. Добавь в админке: <b>Material types</b>.</div>
+  {% endif %}
+
+  <div style="height:12px;"></div>
+
+  <h2>Предметы</h2>
+  {% if subjects %}
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      {% for s in subjects %}
+        <a class="btn btn-outline" href="/materials/list/?subject={{ s.slug }}">{{ s.title }}</a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div style="color:var(--muted);">Пока нет предметов. Добавь в админке: <b>Subjects</b>.</div>
+  {% endif %}
+
+  <div style="height:12px;"></div>
+
+  <h2>Классы</h2>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    {% for g in grades %}
+      <a class="btn btn-outline" href="/materials/list/?grade={{ g }}">{{ g }} класс</a>
+    {% endfor %}
   </div>
-  <div style="margin-top:12px;"><a href="/laws/">Перейти в раздел →</a></div>
 </section>
 
-<section style="margin-top:24px;">
-  <h2>Профили учителей</h2>
-  <p class="muted">Лучшие и активные профили будут отображаться здесь. Временно можно открывать по токену: <code>/&lt;token&gt;/</code></p>
-</section>
 {% endblock %}

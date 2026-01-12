@@ -1,75 +1,34 @@
-<nav style="background:#145587;color:white;padding:12px;">
-  <div style="max-width:960px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;">
-    
-    <a href="/" style="color:white;text-decoration:none;font-weight:bold;">
-      Mugalimder.kz
+{% load static %}
+<nav class="navbar">
+  <div class="inner">
+    <a class="brand" href="/">
+      {# Если потом добавишь logo.png — он появится. Если нет, просто убери img #}
+      <img src="{% static 'img/logo.png' %}" alt="Mugalimder.kz" onerror="this.style.display='none'">
+      <span>Mugalimder.kz</span>
     </a>
 
-    <div style="display:flex;gap:16px;align-items:center;">
-      
-      <a href="/"
-         style="
-           color:white;
-           text-decoration:none;
-           padding:6px 10px;
-           border-radius:4px;
-           {% if request.path == '/' %}
-             background:#0e3f66;
-           {% endif %}
-         ">
-        Главная
-      </a>
+    <div class="nav-links">
+      <a href="/" class="{% if request.path == '/' %}active{% endif %}">Главная</a>
 
-      <a href="/materials/"
-         style="
-           color:white;
-           text-decoration:none;
-           padding:6px 10px;
-           border-radius:4px;
-           {% if request.path|slice:':11' == '/materials/' %}
-             background:#0e3f66;
-           {% endif %}
-         ">
+      <a href="/materials/" class="{% if request.path|slice:':11' == '/materials/' %}active{% endif %}">
         Материалы
       </a>
 
+      {% if user.is_staff %}
+        <a href="/admin/" class="{% if request.path|slice:':7' == '/admin/' %}active{% endif %}">Админка</a>
+      {% endif %}
+
       {% if user.is_authenticated %}
-        <span style="opacity:0.9;">
-          {{ user.username }}
-        </span>
+        <a href="#" style="cursor:default;opacity:.8;">{{ user.username }}</a>
 
-        {% if user.is_staff %}
-          <a href="/admin/" style="color:white;text-decoration:none;">
-            Админка
-          </a>
-        {% endif %}
-
-        <form action="{% url 'logout' %}" method="post" style="display:inline;margin:0;padding:0;">
-  {% csrf_token %}
-  <button type="submit"
-          style="
-            background:none;
-            border:none;
-            color:white;
-            cursor:pointer;
-            padding:0;
-            font:inherit;
-          ">
-    Выйти
-  </button>
-</form>
-
+        <form action="{% url 'logout' %}" method="post" style="display:inline;margin:0;">
+          {% csrf_token %}
+          <button class="btn btn-outline" type="submit">Выйти</button>
+        </form>
       {% else %}
-        <a href="{% url 'login' %}"
-           style="color:white;text-decoration:none;">
-          Войти
-        </a>
-        <a href="{% url 'register' %}"
-           style="color:white;text-decoration:none;">
-          Регистрация
-        </a>
+        <a href="{% url 'login' %}" class="{% if request.path|slice:':11' == '/auth/login' %}active{% endif %}">Войти</a>
+        <a href="{% url 'register' %}" class="{% if request.path|slice:':14' == '/auth/register' %}active{% endif %}">Регистрация</a>
       {% endif %}
     </div>
-
   </div>
 </nav>
